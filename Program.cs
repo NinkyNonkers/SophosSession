@@ -36,15 +36,17 @@ try {
         File.WriteAllText("Config.json", JsonConvert.SerializeObject(config));
     }
     SophosSession sesh = new SophosSession(config);
-    ConsoleLogger.LogInfo("Connecting...");
+    ConsoleLogger.LogInfo("Testing connection...");
     if (!(await sesh.Test())) {
         ConsoleLogger.LogError("Could not connect to host");
         Console.ReadKey();
         return;
     }
+    ConsoleLogger.LogInfo("Logging in...");
     await sesh.Login();
-    ConsoleLogger.LogInfo("Logged in successfully");
+    ConsoleLogger.LogInfo("Logged in successfully - do not close program");
     await sesh.KeepAlive();
+    Console.ReadKey();
 }
 catch (Exception e) {
     ConsoleLogger.LogError(e.Message);
