@@ -40,17 +40,6 @@ namespace SophosSessionHolder {
             if (msg.EnsureSuccessStatusCode() == null) {
                 throw new WebException("Request failed: " + msg.StatusCode.ToString());
             }
-
-
-            ThreadPool.QueueUserWorkItem(async (o) => {
-                while (true) {
-                    await Task.Delay(300000);
-                    ConsoleLogger.LogInfo($"Sent {_goodRequests + _failedRequests} heartbeats in the past five minutes.");
-                    ConsoleLogger.LogInfo($"{_goodRequests}/{_failedRequests + _goodRequests} succeeded");
-                }
-            });
-
-            await KeepAlive();
             
         }
 
@@ -60,10 +49,22 @@ namespace SophosSessionHolder {
             .Replace("{time}", DateTime.Now.TimeOfDay.GetEpoch().ToString());
         }
 
-        private async Task KeepAlive() {
+        public async Task KeepAlive() {
 
             string url = FillEndpoint(LiveEndpoint);
             HttpResponseMessage msg;
+
+
+            ThreadPool.QueueUserWorkItem(async (o) => {
+                while (true) {
+                    await Task.Delay(300000);
+                    ConsoleLogger.LogInfo($"Sent {_goodRequests + _failedRequests} heartbeats in the past five minutes.");
+                    ConsoleLogger.LogInfo($"{_goodRequests}/{_failedRequests + _goodRequests} succeeded");
+                    _goodRequests = 0;
+                    _failedRequests = 0;
+                }
+            });
+
             while (true) {
                 await Task.Delay(1000);
                 msg = await _client.PostAsync(LiveEndpoint, new FormUrlEncodedContent(new Dictionary<string, string>()));

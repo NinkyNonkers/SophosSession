@@ -46,6 +46,8 @@ try {
         return;
     }
     await sesh.Login();
+    ConsoleLogger.LogInfo("Logged in successfully");
+    await sesh.KeepAlive();
 }
 catch (Exception e) {
     ConsoleLogger.LogError(e.Message);
