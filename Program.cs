@@ -1,9 +1,4 @@
-﻿/*
-TODO:
-Make more customisable
-*/
-
-using SophosSessionHolder;
+﻿using SophosSessionHolder;
 using System;
 using NinkyNonk.Shared.Logging;
 using Newtonsoft.Json;
@@ -40,7 +35,7 @@ try {
         ConsoleLogger.LogInfo("Saving config....");
         File.WriteAllText("Config.json", JsonConvert.SerializeObject(config));
     }
-    SophosSession sesh = new SophosSession(config.Username, config.Password, config.EndpointRoot);
+    SophosSession sesh = new SophosSession(config);
     ConsoleLogger.LogInfo("Connecting...");
     if (!(await sesh.Test())) {
         ConsoleLogger.LogError("Could not connect to host");

@@ -10,6 +10,7 @@ namespace SophosSessionHolder {
         private readonly string _username;
         private readonly string _password;
         private readonly string _host;
+        private readonly int _heartbeatTimeout;
 
         private readonly HttpClient _client;
 
@@ -17,10 +18,11 @@ namespace SophosSessionHolder {
         private int _failedRequests;
 
         
-        public SophosSession(string username, string password, string host) {
-            _username = System.Web.HttpUtility.UrlEncode(username);
-            _password = System.Web.HttpUtility.UrlEncode(password);
-            _host = host;
+        public SophosSession(SophosSessionConfiguration config) {
+            _username = System.Web.HttpUtility.UrlEncode(config.Username);
+            _password = System.Web.HttpUtility.UrlEncode(config.Password);
+            _host = config.EndpointRoot;
+            _heartbeatTimeout = config.HeartbeatMiliseconds;
             _client = new HttpClient();
         }
 
@@ -66,7 +68,7 @@ namespace SophosSessionHolder {
             });
 
             while (true) {
-                await Task.Delay(1000);
+                await Task.Delay(_heartbeatTimeout);
                 msg = await _client.PostAsync(LiveEndpoint, new FormUrlEncodedContent(new Dictionary<string, string>()));
                 if (msg.StatusCode != HttpStatusCode.OK)
                     _failedRequests++;
