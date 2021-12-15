@@ -1,6 +1,6 @@
 # SophosSession
 
-This project was brought to you whilst destroying the ambience by typing in sounds in the Sixth Form Library
+This project was brought to you whilst destroying the ambience by loud, heavy typing sounds in the Sixth Form Library
 
 ## Usage
 
@@ -12,4 +12,6 @@ You can also launch normally and you will be prompted for configuration, it will
 
 * Initial login request
 
-* Period heartbeat response
+* Periodic heartbeat
+
+* Customisable host, username and password

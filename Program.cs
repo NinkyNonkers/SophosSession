@@ -14,9 +14,11 @@ try {
     ConsoleLogger.LogProgramInfo();
     ConsoleLogger.LogInfo("Starting...");
     if (args.Length > 0) {
-        if (args.Length == 2) {
+        if (args.Length >= 2) {
             config.Username = args[0];
             config.Password = args[1];
+            if (args.Length == 3)
+                config.EndpointRoot = args[2];
         }
         else {
             throw new ArgumentException("Not enough arguments!");
