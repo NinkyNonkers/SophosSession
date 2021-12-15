@@ -8,6 +8,14 @@ Use SophosSessionHolder.exe (username) (password) (host) to run from command lin
 
 You can also launch normally and you will be prompted for configuration, it will then be saved to Config.json
 
+### QES
+
+Host: https://sophosxg.queenelizabeth.cumbria.sch.uk:8090/
+
+Username: (login)@queenelizabeth.cumbria.sch.uk
+
+Password: no
+
 ## Features
 
 * Initial login request
@@ -15,3 +23,4 @@ You can also launch normally and you will be prompted for configuration, it will
 * Periodic heartbeat
 
 * Customisable host, username and password
+
