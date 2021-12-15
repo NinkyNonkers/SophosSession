@@ -1,4 +1,9 @@
+using System;
+using System.Collections.Generic;
 using System.Net;
+using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
 using NinkyNonk.Shared.Logging;
 
 
@@ -40,7 +45,7 @@ namespace SophosSessionHolder {
             new FormUrlEncodedContent(new Dictionary<string, string>()));
 
             if (msg.EnsureSuccessStatusCode() == null) {
-                throw new WebException("Request failed: " + msg.StatusCode.ToString());
+                throw new WebException("Request failed: " + msg.StatusCode);
             }
             
         }
@@ -69,7 +74,7 @@ namespace SophosSessionHolder {
 
             while (true) {
                 await Task.Delay(_heartbeatTimeout);
-                msg = await _client.PostAsync(LiveEndpoint, new FormUrlEncodedContent(new Dictionary<string, string>()));
+                msg = await _client.PostAsync(url, new FormUrlEncodedContent(new Dictionary<string, string>()));
                 if (msg.StatusCode != HttpStatusCode.OK)
                     _failedRequests++;
                 else
