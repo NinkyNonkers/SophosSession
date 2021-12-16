@@ -24,6 +24,8 @@ namespace SophosSessionHolder {
         private int _goodRequests;
         private int _failedRequests;
 
+        public int TotalSessionRequests { get => _goodRequests + _failedRequests; }
+
         
         public SophosSession(SophosSessionConfiguration config) {
             _username = System.Web.HttpUtility.UrlEncode(config.Username);
@@ -63,7 +65,6 @@ namespace SophosSessionHolder {
                 throw new WebException("Request failed: " + msg.StatusCode);
             }
 
-
             _client.DefaultRequestHeaders.Remove("X-Requested-With");
             
         }
@@ -83,8 +84,7 @@ namespace SophosSessionHolder {
             ThreadPool.QueueUserWorkItem(async (o) => {
                 while (true) {
                     await Task.Delay(300000);
-                    ConsoleLogger.LogInfo($"Sent {_goodRequests + _failedRequests} heartbeats in the past five minutes.");
-                    ConsoleLogger.LogInfo($"{_goodRequests}/{_failedRequests + _goodRequests} succeeded");
+                    ConsoleLogger.LogInfo($"Sent {TotalSessionRequests} heartbeats in the past five minutes. {_goodRequests}/{TotalSessionRequests} succeeded");
                     _goodRequests = 0;
                     _failedRequests = 0;
                 }
@@ -93,7 +93,7 @@ namespace SophosSessionHolder {
             while (true) {
                 await Task.Delay(_heartbeatTimeout);
                 msg = await _client.PostAsync(url, new FormUrlEncodedContent(new Dictionary<string, string>()));
-                if (msg.StatusCode != HttpStatusCode.OK)
+                if (!msg.CheckSuccess())
                     _failedRequests++;
                 else
                     _goodRequests++;
