@@ -5,13 +5,15 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using NinkyNonk.Shared.Logging;
-
+using System.Net.Http;
+using System.Net.Http.Formatting;
 
 namespace SophosSessionHolder {
     public class SophosSession
     {
-        private const string Endpoint = "login.xml?username={username}&mode=191&password={password}&producttype=0&a={time}";
+        private const string Endpoint = "login.xml";
         private const string LiveEndpoint = "live?mode=192&username={username}&a={time}&producttype=0";
+        private const string BodyTemplate = "mode=191&username={username}&password={password}&a={time}&producttype=0";
         private readonly string _username;
         private readonly string _password;
         private readonly string _host;
@@ -29,31 +31,47 @@ namespace SophosSessionHolder {
             _host = config.EndpointRoot;
             _heartbeatTimeout = config.HeartbeatMiliseconds;
             _client = new HttpClient();
+            _client.DefaultRequestHeaders.Referrer = new Uri(_host);
         }
 
 
         public async Task<bool> Test() {
             HttpResponseMessage response = await _client.GetAsync(_host);
-            return response.StatusCode != HttpStatusCode.OK;
+            response.EnsureSuccessStatusCode();
+            return true;
         }
 
 
         public async Task Login() {
-            string url = FillEndpoint(Endpoint);
+            string url = _host + Endpoint;
 
-            HttpResponseMessage msg = await _client.PostAsync(url, 
-            new FormUrlEncodedContent(new Dictionary<string, string>()));
+            Dictionary<string, string> body = new Dictionary<string, string>() {
+                {"mode", "191"},
+                {"username", _username},
+                {"password", _password},
+                {"a", DateTime.Now.GetEpoch().ToString()},
+                {"producttype", "0"},
+            };
+
+            //_client.DefaultRequestHeaders.Add("X-Requested-With", "XMLHttpRequest");
+            _client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/x-www-form-urlencoded"));
+            
+            HttpResponseMessage msg = 
+                    await _client.PostAsync(url, new FormUrlEncodedContent(body));
 
             if (msg.EnsureSuccessStatusCode() == null) {
                 throw new WebException("Request failed: " + msg.StatusCode);
             }
+
+
+            _client.DefaultRequestHeaders.Remove("X-Requested-With");
             
         }
 
         private string FillEndpoint(string endpoint) {
             return _host + endpoint.Replace("{username}", _username)
             .Replace("{password}", _password)
-            .Replace("{time}", DateTime.Now.TimeOfDay.GetEpoch().ToString());
+            .Replace("{time}", DateTime.Now.GetEpoch().ToString());
         }
 
         public async Task KeepAlive() {

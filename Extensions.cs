@@ -2,10 +2,9 @@ using System;
 
 namespace SophosSessionHolder {
     public static class Extensions {
-        public static int GetEpoch(this TimeSpan span) {
-            TimeSpan t = span - new DateTime(1970, 1, 1).TimeOfDay;
-            int secondsSinceEpoch = (int)t.TotalSeconds;
-            return secondsSinceEpoch;
+        public static int GetEpoch(this DateTime span) {
+            double t = (span - new DateTime(1970, 1, 1)).TotalSeconds;
+            return (int) t;
         }
     }
 }

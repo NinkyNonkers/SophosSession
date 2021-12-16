@@ -44,7 +44,7 @@ try {
         ConsoleLogger.LogError("Could not connect to host");
         Console.ReadKey();
         return;
-    }
+    } 
     ConsoleLogger.LogInfo("Logging in...");
     await sesh.Login();
     ConsoleLogger.LogInfo("Logged in successfully - do not close program");
