@@ -10,7 +10,7 @@ namespace SophosSessionHolder {
             Username = "";
             Password = "";
             EndpointRoot = "https://sophosxg.queenelizabeth.cumbria.sch.uk:8090/";
-            HeartbeatMiliseconds = 1000;
+            HeartbeatMiliseconds = 180000;
         }
 
         public SophosSessionConfiguration(string username, string password, string endpointRoot, int heartbeatMiliseconds) {
