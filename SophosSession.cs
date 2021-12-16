@@ -55,7 +55,6 @@ namespace SophosSessionHolder {
                 {"producttype", "0"},
             };
 
-            //_client.DefaultRequestHeaders.Add("X-Requested-With", "XMLHttpRequest");
             _client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/x-www-form-urlencoded"));
             
             HttpResponseMessage msg = 
@@ -64,8 +63,6 @@ namespace SophosSessionHolder {
             if (msg.EnsureSuccessStatusCode() == null) {
                 throw new WebException("Request failed: " + msg.StatusCode);
             }
-
-            _client.DefaultRequestHeaders.Remove("X-Requested-With");
             
         }
 
@@ -92,7 +89,7 @@ namespace SophosSessionHolder {
 
             while (true) {
                 await Task.Delay(_heartbeatTimeout);
-                msg = await _client.PostAsync(url, new FormUrlEncodedContent(new Dictionary<string, string>()));
+                msg = await _client.GetAsync(url);
                 if (!msg.CheckSuccess())
                     _failedRequests++;
                 else

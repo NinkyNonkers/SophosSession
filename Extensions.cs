@@ -1,4 +1,5 @@
 using System;
+using NinkyNonk.Shared.Logging;
 
 namespace SophosSessionHolder {
     public static class Extensions {
@@ -11,7 +12,8 @@ namespace SophosSessionHolder {
             try {
                 msg.EnsureSuccessStatusCode();
             }
-            catch {
+            catch (Exception e) {
+                ConsoleLogger.LogError(e.Message);
                 return false;
             }
             return true;
