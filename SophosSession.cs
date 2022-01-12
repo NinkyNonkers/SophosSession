@@ -27,12 +27,17 @@ namespace SophosSessionHolder {
 
         
         public SophosSession(SophosSessionConfiguration config) {
-            _username = config.Username.Replace("@", "%40");
-            _password = System.Web.HttpUtility.UrlEncode(config.Password);
+            _username = config.Username;
+            _password = config.Password;
             _host = config.EndpointRoot;
             _heartbeatTimeout = config.HeartbeatMiliseconds;
             _client = new HttpClient();
             _client.DefaultRequestHeaders.Referrer = new Uri(_host);
+        }
+
+
+        private string EncodeUsername() {
+            return _username.Replace("@", "%40");
         }
 
 
@@ -66,7 +71,7 @@ namespace SophosSessionHolder {
         }
 
         private string FillEndpoint(string endpoint) {
-            return _host + endpoint.Replace("{username}", _username)
+            return _host + endpoint.Replace("{username}", EncodeUsername())
             .Replace("{password}", _password)
             .Replace("{time}", DateTime.Now.GetEpoch().ToString());
         }
