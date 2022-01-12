@@ -13,7 +13,6 @@ namespace SophosSessionHolder {
     {
         private const string Endpoint = "login.xml";
         private const string LiveEndpoint = "live?mode=192&username={username}&a={time}&producttype=0";
-        private const string BodyTemplate = "mode=191&username={username}&password={password}&a={time}&producttype=0";
         private readonly string _username;
         private readonly string _password;
         private readonly string _host;
@@ -28,7 +27,7 @@ namespace SophosSessionHolder {
 
         
         public SophosSession(SophosSessionConfiguration config) {
-            _username = System.Web.HttpUtility.UrlEncode(config.Username);
+            _username = config.Username.Replace("@", "%40");
             _password = System.Web.HttpUtility.UrlEncode(config.Password);
             _host = config.EndpointRoot;
             _heartbeatTimeout = config.HeartbeatMiliseconds;

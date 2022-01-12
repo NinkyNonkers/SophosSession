@@ -49,12 +49,13 @@ try {
     await sesh.Login();
     ConsoleLogger.LogInfo("Logged in successfully - do not close program");
     await sesh.KeepAlive();
-    Console.ReadKey();
 }
 catch (Exception e) {
     ConsoleLogger.LogError(e.Message);
-    Console.ReadKey();
 }
+
+Console.ReadKey();
+
 
 
 

@@ -11,6 +11,10 @@ namespace SophosSessionHolder {
         public static bool CheckSuccess(this HttpResponseMessage msg) {
             try {
                 msg.EnsureSuccessStatusCode();
+                if (msg.Content == null) 
+                    throw new Exception("Did not receive proper response");
+                if (msg.Content.ToString().ToLower().Contains("invalid username")) 
+                    throw new Exception("Invalid username or password!");
             }
             catch (Exception e) {
                 ConsoleLogger.LogError(e.Message);
