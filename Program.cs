@@ -1,6 +1,4 @@
 ﻿using SophosSessionHolder;
-using System;
-using System.IO;
 using NinkyNonk.Shared.Logging;
 using Newtonsoft.Json;
 
@@ -14,7 +12,7 @@ try {
             config.Username = args[0];
             config.Password = args[1];
             if (args.Length == 3)
-                config.EndpointRoot = args[2];
+                        config.EndpointRoot = args[2];
         }
         else {
             throw new ArgumentException("Not enough arguments!");
@@ -47,7 +45,7 @@ try {
     } 
     ConsoleLogger.LogInfo("Logging in...");
     await sesh.Login();
-    ConsoleLogger.LogInfo("Logged in successfully - do not close program");
+    ConsoleLogger.LogSuccess("Logged in successfully - do not close program");
     await sesh.KeepAlive();
 }
 catch (Exception e) {

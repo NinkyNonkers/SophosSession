@@ -1,4 +1,3 @@
-using System;
 using NinkyNonk.Shared.Logging;
 
 namespace SophosSessionHolder {
@@ -13,7 +12,7 @@ namespace SophosSessionHolder {
                 msg.EnsureSuccessStatusCode();
                 if (msg.Content == null) 
                     throw new Exception("Did not receive proper response");
-                if (msg.Content.ToString().ToLower().Contains("invalid user name")) 
+                if (msg.Content.ToString()!.ToLower().Contains("invalid user name")) 
                     throw new Exception("Invalid username or password!");
             }
             catch (Exception e) {

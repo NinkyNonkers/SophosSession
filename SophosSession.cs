@@ -1,12 +1,5 @@
-using System;
-using System.Collections.Generic;
 using System.Net;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
 using NinkyNonk.Shared.Logging;
-using System.Net.Http;
-using System.Net.Http.Formatting;
 
 namespace SophosSessionHolder {
     public class SophosSession
@@ -64,7 +57,7 @@ namespace SophosSessionHolder {
             HttpResponseMessage msg = 
                     await _client.PostAsync(url, new FormUrlEncodedContent(body));
 
-            if (msg.EnsureSuccessStatusCode() == null) {
+            if (msg.CheckSuccess()) {
                 throw new WebException("Request failed: " + msg.StatusCode);
             }
             
@@ -82,10 +75,10 @@ namespace SophosSessionHolder {
             HttpResponseMessage msg;
 
 
-            ThreadPool.QueueUserWorkItem(async (o) => {
+            ThreadPool.QueueUserWorkItem(async _ => {
                 while (true) {
                     await Task.Delay(300000);
-                    ConsoleLogger.LogInfo($"Sent {TotalSessionRequests} heartbeats in the past five minutes. {_goodRequests}/{TotalSessionRequests} succeeded");
+                    ConsoleLogger.LogUpdate($"Sent {TotalSessionRequests} heartbeats in the past five minutes. {_goodRequests}/{TotalSessionRequests} succeeded");
                     _goodRequests = 0;
                     _failedRequests = 0;
                 }
