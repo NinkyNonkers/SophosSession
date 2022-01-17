@@ -57,7 +57,7 @@ namespace SophosSessionHolder {
             HttpResponseMessage msg = 
                     await _client.PostAsync(url, new FormUrlEncodedContent(body));
 
-            if (msg.CheckSuccess()) {
+            if (!msg.CheckSuccess()) {
                 throw new WebException("Request failed: " + msg.StatusCode);
             }
             
