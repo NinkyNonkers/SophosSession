@@ -1,4 +1,5 @@
 using System.Net;
+using NinkyNonk.Shared.Data;
 using NinkyNonk.Shared.Logging;
 
 namespace SophosSessionHolder {
@@ -54,8 +55,7 @@ namespace SophosSessionHolder {
 
             _client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/x-www-form-urlencoded"));
             
-            HttpResponseMessage msg = 
-                    await _client.PostAsync(url, new FormUrlEncodedContent(body));
+            HttpResponseMessage msg = await _client.PostAsync(url, new FormUrlEncodedContent(body));
 
             if (msg.CheckSuccess()) {
                 throw new WebException("Request failed: " + msg.StatusCode);
@@ -72,7 +72,6 @@ namespace SophosSessionHolder {
         public async Task KeepAlive() {
 
             string url = FillEndpoint(LiveEndpoint);
-            HttpResponseMessage msg;
 
 
             ThreadPool.QueueUserWorkItem(async _ => {
@@ -86,9 +85,13 @@ namespace SophosSessionHolder {
 
             while (true) {
                 await Task.Delay(_heartbeatTimeout);
-                msg = await _client.GetAsync(url);
+                var msg = await _client.GetAsync(url);
                 if (!msg.CheckSuccess())
+                {
                     _failedRequests++;
+                    ConsoleLogger.LogInfo("Re-logging in due to error...");
+                    await Login();
+                }
                 else
                     _goodRequests++;
             }

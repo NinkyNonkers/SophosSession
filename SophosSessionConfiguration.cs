@@ -5,7 +5,6 @@ namespace SophosSessionHolder {
         public string EndpointRoot {get; set;}
         public int HeartbeatMiliseconds { get; set;}
 
-
         public SophosSessionConfiguration() {
             Username = "";
             Password = "";
