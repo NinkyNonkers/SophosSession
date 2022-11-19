@@ -1,5 +1,6 @@
 using System.Net;
 using NinkyNonk.Shared.Data;
+using NinkyNonk.Shared.Environment;
 using NinkyNonk.Shared.Logging;
 
 namespace SophosSessionHolder {
@@ -28,20 +29,17 @@ namespace SophosSessionHolder {
             _client = new HttpClient();
             _client.DefaultRequestHeaders.Referrer = new Uri(_host);
         }
-
-
+        
         private string EncodeUsername() {
             return _username.Replace("@", "%40");
         }
-
-
+        
         public async Task<bool> Test() {
             HttpResponseMessage response = await _client.GetAsync(_host);
             response.EnsureSuccessStatusCode();
             return true;
         }
-
-
+        
         public async Task Login() {
             string url = _host + Endpoint;
 
@@ -77,7 +75,7 @@ namespace SophosSessionHolder {
             ThreadPool.QueueUserWorkItem(async _ => {
                 while (true) {
                     await Task.Delay(300000);
-                    ConsoleLogger.LogUpdate($"Sent {TotalSessionRequests} heartbeats in the past five minutes. {_goodRequests}/{TotalSessionRequests} succeeded");
+                    Project.LoggingProxy.LogUpdate($"Sent {TotalSessionRequests} heartbeats in the past five minutes. {_goodRequests}/{TotalSessionRequests} succeeded");
                     _goodRequests = 0;
                     _failedRequests = 0;
                 }

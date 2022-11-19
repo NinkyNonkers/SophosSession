@@ -1,12 +1,13 @@
 ﻿using SophosSessionHolder;
 using NinkyNonk.Shared.Logging;
 using Newtonsoft.Json;
+using NinkyNonk.Shared.Environment;
 
 SophosSessionConfiguration? config = new SophosSessionConfiguration();
 
 try {
-    ConsoleLogger.LogProgramInfo();
-    ConsoleLogger.LogInfo("Starting...");
+    Project.LoggingProxy.LogProgramInfo();
+    Project.LoggingProxy.LogInfo("Starting...");
     if (args.Length > 0) {
         if (args.Length >= 2) {
             config.Username = args[0];
@@ -28,28 +29,28 @@ try {
         }
     }
     else {
-        config.EndpointRoot = ConsoleLogger.AskInput("Host: ");
-        config.Username = ConsoleLogger.AskInput("Username: ");
-        config.Password = ConsoleLogger.AskInput("Password: ");
+        config.EndpointRoot = Project.LoggingProxy.AskInput("Host: ");
+        config.Username = Project.LoggingProxy.AskInput("Username: ");
+        config.Password = Project.LoggingProxy.AskInput("Password: ");
         ConsoleLogger.LogInfo("Saving config....");
         File.WriteAllText("Config.json", JsonConvert.SerializeObject(config));
     }
 
-    ConsoleLogger.LogInfo("Testing connection...");
+    Project.LoggingProxy.LogInfo("Testing connection...");
     SophosSession sesh = new(config);
 
     if (!(await sesh.Test())) {
-        ConsoleLogger.LogError("Could not connect to host");
+        Project.LoggingProxy.LogError("Could not connect to host");
         Console.ReadKey();
         return;
     } 
-    ConsoleLogger.LogInfo("Logging in...");
+    Project.LoggingProxy.LogInfo("Logging in...");
     await sesh.Login();
-    ConsoleLogger.LogSuccess("Logged in successfully - do not close program");
+    Project.LoggingProxy.LogSuccess("Logged in successfully - do not close program");
     await sesh.KeepAlive();
 }
 catch (Exception e) {
-    ConsoleLogger.LogError(e.Message);
+    Project.LoggingProxy.LogError(e.Message);
 }
 
 Console.ReadKey();

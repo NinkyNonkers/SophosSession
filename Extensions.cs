@@ -1,4 +1,4 @@
-using NinkyNonk.Shared.Logging;
+using NinkyNonk.Shared.Environment;
 
 namespace SophosSessionHolder {
     public static class Extensions {
@@ -11,7 +11,7 @@ namespace SophosSessionHolder {
                     throw new Exception("Invalid username or password!");
             }
             catch (Exception e) {
-                ConsoleLogger.LogError(e.Message);
+                Project.LoggingProxy.LogError(e.Message);
                 return false;
             }
             return true;
