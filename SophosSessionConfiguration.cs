@@ -1,23 +1,23 @@
-namespace SophosSessionHolder {
-    public class SophosSessionConfiguration {
-        public string Username { get; set; }
-        public string Password { get; set; }
-        public string EndpointRoot {get; set;}
-        public int HeartbeatMiliseconds { get; set;}
+namespace SophosSessionHolder;
 
-        public SophosSessionConfiguration() {
-            Username = "";
-            Password = "";
-            EndpointRoot = "https://sophosxg.queenelizabeth.cumbria.sch.uk:8090/";
-            HeartbeatMiliseconds = 180000;
-        }
+public class SophosSessionConfiguration {
+    public string Username { get; set; }
+    public string Password { get; set; }
+    public string EndpointRoot {get; set;}
+    public int HeartbeatMiliseconds { get; set;}
 
-        public SophosSessionConfiguration(string username, string password, string endpointRoot, int heartbeatMiliseconds) {
-            Username = username;
-            Password = password;
-            EndpointRoot = endpointRoot;
-            HeartbeatMiliseconds = heartbeatMiliseconds;
-        }
-        
+    public SophosSessionConfiguration()
+    {
+        Username = "";
+        Password = "";
+        EndpointRoot = "https://sophosxg.queenelizabeth.cumbria.sch.uk:8090/";
+        HeartbeatMiliseconds = 180000;
+    }
+
+    public SophosSessionConfiguration(string username, string password, string endpointRoot, int heartbeatMiliseconds) {
+        Username = username;
+        Password = password;
+        EndpointRoot = endpointRoot;
+        HeartbeatMiliseconds = heartbeatMiliseconds;
     }
 }
